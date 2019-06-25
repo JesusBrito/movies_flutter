@@ -21,7 +21,7 @@ class MovieHorizontal extends StatelessWidget {
     });
 
     return Container(
-      height: _screenSize.height * 0.25,
+      height: _screenSize.height * 0.30,
       child: PageView.builder(
         pageSnapping: false,
         controller: _pageController,
@@ -32,26 +32,37 @@ class MovieHorizontal extends StatelessWidget {
   }
 
   Widget _card(BuildContext context, MMovie movie) {
-    return Container(
+    movie.uniqueID = '${movie.id}-poster';
+    final movieCard = Container(
         margin: EdgeInsets.only(right: 15.0),
         child: Column(
           children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: FadeInImage(
-                image: NetworkImage(movie.getPosterImg()),
-                placeholder: AssetImage('assets/img/image-placeholder.png'),
-                fit: BoxFit.cover,
-                height: 160.0,
+            Hero(
+              tag: movie.uniqueID,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: FadeInImage(
+                  image: NetworkImage(movie.getPosterImg()),
+                  placeholder: AssetImage('assets/img/image-placeholder.png'),
+                  fit: BoxFit.cover,
+                  height: 160.0,
+                ),
               ),
             ),
             SizedBox(height: 5.0),
             Text(
               movie.title,
-              overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.clip,
               style: Theme.of(context).textTheme.caption,
             )
           ],
         ));
+
+    return GestureDetector(
+      child: movieCard,
+      onTap: () {
+        Navigator.pushNamed(context, 'detail', arguments: movie);
+      },
+    );
   }
 }
